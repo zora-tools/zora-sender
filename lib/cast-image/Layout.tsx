@@ -76,7 +76,6 @@ export function Layout({ cast }: { cast: NeynarCast }) {
                 flex: 1,
                 width: "100%",
                 display: "flex",
-                paddingLeft: "80px",
               }}
             >
               <CastContent cast={cast} />
