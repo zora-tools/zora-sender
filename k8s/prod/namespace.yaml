@@ -1,6 +1,0 @@
-apiVersion: v1
-kind: Namespace
-metadata:
-  labels:
-    app: degencast-namespace-prod
-  name: degencast-namespace-prod

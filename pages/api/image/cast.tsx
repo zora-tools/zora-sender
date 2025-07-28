@@ -3,6 +3,7 @@ import { getCastWithHash } from "@/lib/createproposal/neynar-api";
 import satori from "satori";
 import * as fs from "node:fs";
 import * as path from "node:path";
+import sharp from "sharp";
 
 export const config = {
   runtime: "nodejs",
@@ -20,8 +21,13 @@ const MontserratBlackItalic = fs.readFileSync(
 export default async function handler(req: any, res: any) {
   const { hash } = req.query;
 
-  let element = null;
+  const pngBuffer = await getCastPngImage(hash);
+  res.setHeader("Content-Type", "image/png");
+  res.send(pngBuffer);
+}
 
+export async function getCastPngImage(hash: string) {
+  let element = null;
   if (!hash) {
     element = <ErrorLayout title="Requires the hash parameter" />;
   } else {
@@ -72,8 +78,12 @@ export default async function handler(req: any, res: any) {
       ],
     }
   );
-  res.setHeader("Content-Type", "image/svg+xml");
-  res.send(svg);
+  
+  // 将 SVG 转换为 PNG
+  const pngBuffer = await sharp(Buffer.from(svg))
+    .png()
+    .toBuffer();
+  return pngBuffer;
 }
 
 function ErrorLayout({ title }: { title: string }) {

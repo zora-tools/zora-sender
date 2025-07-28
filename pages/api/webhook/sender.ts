@@ -1,0 +1,57 @@
+import { genNodeAPI, getTokenTagByEver } from 'arseeding-js';
+import type { DataItemCreateOptions } from 'arseeding-arbundles';
+import axios from 'axios';
+import { FRAMES_BASE_URL } from '@/lib/env';
+import { createMyCoin } from '@/lib/zoraCoin';
+import { createMetadataBuilder, createZoraUploaderForCreator, ValidMetadataURI } from '@zoralabs/coins-sdk';
+import { getCastPngImage } from '../image/cast';
+const ARSEEDING_WALLET_PRIVATE_KEY = process.env.ARSEEDING_WALLET_PRIVATE_KEY;
+const ARSEED_URL = process.env.ARSEED_URL || 'https://arseed.web3infra.dev';
+export default async function handler(req: any, res: any) {
+const { castHash } = req.query;
+  const castImage = await getCastPngImage(castHash);
+
+console.log('castImage',castImage.length);
+  const coin = await createMyCoin({
+    name: castHash,
+    symbol: castHash.substring(0, 8),
+    uri: "" as ValidMetadataURI,
+    payoutRecipient: "0x474A491d6de25e868E45222fD2a8c6714d759e6F",
+  }, castImage);
+  res.setHeader("Content-Type", "application/json");
+  res.send('ok');
+}
+
+async function getAr(castHash: string){
+    const imageUrl = `${FRAMES_BASE_URL}/api/image/cast?hash=${castHash}`;
+
+    const response = await axios.get(imageUrl, {
+      responseType: 'arraybuffer',
+    });
+    const data = Buffer.from(response.data, 'binary');
+    const contentType = response.headers['content-type'];
+    let tags = [{ name: "Content-Type", value: contentType }];
+    const res = await sendAndPay(data, { tags });
+    return res;
+  }
+
+async function sendAndPay(data: Buffer, options: DataItemCreateOptions) {
+    if (!ARSEEDING_WALLET_PRIVATE_KEY) {
+        console.error('ARSEEDING_WALLET_PRIVATE_KEY not found');
+        return;
+      }
+      const arseedingInstance = genNodeAPI(ARSEEDING_WALLET_PRIVATE_KEY);
+      // everPay 支持的 token tag (chainType-symbol-id) , 默认用: ethereum-eth-0x0000000000000000000000000000000000000000
+      const payCurrencyTags = await getTokenTagByEver('eth');
+      const payCurrencyTag = payCurrencyTags[0];
+    const res = await arseedingInstance.sendAndPay(
+      ARSEED_URL,
+      data,
+      payCurrencyTag,
+      options,
+    );
+    const itemId = res.order.itemId;
+    const arseedUrl = `${ARSEED_URL}/${itemId}`;
+    const arUrl = `https://arweave.net/${itemId}`;
+    return { arUrl, arseedUrl, ...res };
+}

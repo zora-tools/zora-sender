@@ -4,7 +4,7 @@ import CastContent from "./CastContent";
 import { getWarpcastImageUrl } from "../cast";
 import { getEmbeds } from "../getEmbeds";
 
-const bgUrl = `${FRAMES_BASE_URL}/images/image-api/cast-bg.jpg`;
+const bgUrl = `${FRAMES_BASE_URL}/images/image-api/cast-bg.png`;
 const homeImgUrl = `${FRAMES_BASE_URL}/images/image-api/home.png`;
 export function Layout({ cast }: { cast: NeynarCast }) {
   const { imgs, videos, ogs, frames, casts } = getEmbeds(cast);
@@ -29,7 +29,7 @@ export function Layout({ cast }: { cast: NeynarCast }) {
         color: "white",
       }}
     >
-      <div
+      {/* <div
         style={{
           display: "flex",
           width: "100%",
@@ -40,7 +40,7 @@ export function Layout({ cast }: { cast: NeynarCast }) {
         }}
       >
         <ChannelInfo channel={cast?.channel} />
-      </div>
+      </div> */}
       <div
         style={{
           flex: 1,
@@ -76,6 +76,7 @@ export function Layout({ cast }: { cast: NeynarCast }) {
                 flex: 1,
                 width: "100%",
                 display: "flex",
+                paddingLeft: "80px",
               }}
             >
               <CastContent cast={cast} />
