@@ -8,19 +8,24 @@ import { getCastPngImage } from '../image/cast';
 const ARSEEDING_WALLET_PRIVATE_KEY = process.env.ARSEEDING_WALLET_PRIVATE_KEY;
 const ARSEED_URL = process.env.ARSEED_URL || 'https://arseed.web3infra.dev';
 export default async function handler(req: any, res: any) {
-
     console.log('Zora hook request data:',req.body);
-    return;
-    const { castHash } = req.query;
-    const castImage = await getCastPngImage(castHash);
+    const userAddress = req.body.data.author?.verified_addresses?.primary?.eth_address;
+    const parentCastHash = req.body.data.parent_hash;
+    const castHash = req.body.data.hash;
+    console.log('Zora hook request userAddress:',userAddress);
+    console.log('Zora hook request parentCastHash:',parentCastHash);
+    console.log('Zora hook request castHash:',castHash);
 
+    const castImageBuffer = await getCastPngImage(parentCastHash);
     const coin = await createMyCoin({
-        name: castHash.substring(0, 8),
-        symbol: castHash.substring(0, 8),
+        name: parentCastHash.substring(0, 8),
+        symbol: parentCastHash.substring(0, 8),
         uri: "" as ValidMetadataURI,
-        payoutRecipient: "0x474A491d6de25e868E45222fD2a8c6714d759e6F",
+        payoutRecipient: userAddress??"0x474A491d6de25e868E45222fD2a8c6714d759e6F",
         platformReferrer: "0x474A491d6de25e868E45222fD2a8c6714d759e6F",
-    }, castImage);
+    }, castImageBuffer);
+
+    // TODO
     res.setHeader("Content-Type", "application/json");
     res.send({coinAddress: coin.address});
 }
