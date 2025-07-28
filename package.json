@@ -33,7 +33,7 @@
     "viem": "^2.11.1"
   },
   "devDependencies": {
-    "@frames.js/debugger": "^0.3.13",
+    "@frames.js/debugger": "latest",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
