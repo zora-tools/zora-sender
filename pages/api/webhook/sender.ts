@@ -13,13 +13,14 @@ const { castHash } = req.query;
 
 console.log('castImage',castImage.length);
   const coin = await createMyCoin({
-    name: castHash,
+    name: castHash.substring(0, 8),
     symbol: castHash.substring(0, 8),
     uri: "" as ValidMetadataURI,
     payoutRecipient: "0x474A491d6de25e868E45222fD2a8c6714d759e6F",
+    platformReferrer: "0x474A491d6de25e868E45222fD2a8c6714d759e6F",
   }, castImage);
   res.setHeader("Content-Type", "application/json");
-  res.send('ok');
+  res.send({coinAddress: coin.address});
 }
 
 async function getAr(castHash: string){
