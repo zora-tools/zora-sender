@@ -21,35 +21,8 @@ function VoteCasts() {
     </div>
   );
   return (
-    // <div className="w-screen h-screen flex flex-col gap-4 p-6 bg-[#2A2432] overflow-y-auto">
-    //   <InfiniteScroll
-    //     pageStart={0}
-    //     loadMore={() => {
-    //       if (loading) return;
-    //       loadItems();
-    //     }}
-    //     hasMore={hasNextPage}
-    //     loader={loader}
-    //     useWindow={false}
-    //   >
-    //     <ComposerDescription />
-    //     <Separator className="my-4 bg-[#A36EFE33]" />
-    //     <div className="w-full flex flex-col gap-4 ">
-    //       {items.map((item) => {
-    //         const { cast, proposal, channel, tokenInfo } = item;
-    //         return (
-    //           <ChannelCastCard
-    //             key={cast.hash}
-    //             cast={cast}
-    //             proposal={proposal}
-    //             channel={channel}
-    //             tokenInfo={tokenInfo}
-    //           />
-    //         );
-    //       })}
-    //     </div>
-    //   </InfiniteScroll>
-    // </div>
+    <div className="w-screen h-screen flex flex-col gap-4 p-6 bg-[#2A2432] overflow-y-auto">
+    </div>
   );
 }
 
