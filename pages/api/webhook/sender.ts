@@ -15,6 +15,13 @@ export default async function handler(req: any, res: any) {
     const parentCastHash = req.body.data.parent_hash;
     const castFid = req.body.data.author.fid;
     const castHash = req.body.data.hash;
+    const text = req.body.data.text as string;
+
+    if(!text.toLowerCase().replace(/\s/g, '').includes('sendit')){
+       console.log('not sendit');
+       return res.send('ok');
+    }
+
     console.log('Zora hook request userAddress:',userAddress);
     console.log('Zora hook request parentCastHash:',parentCastHash);
     console.log('Zora hook request castHash:',castHash);
